@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 /**
- * structure initialization
+ * 表结构初始化
  */
 public class TableConfig {
     public static final String NAME = "name";
@@ -24,16 +24,16 @@ public class TableConfig {
     public static final String BRACKET_A = ")";
     public static final String SEPARATOR = ",";
     public static final String POINT = ".";
-    public static final int BUFFERSIZE = 1024 * 1024 * 2;//buffer size for reading data
+    public static final int BUFFERSIZE = 1024 * 1024 * 2;//读取数据流文件缓冲区大小
 
     public static final String PAGENAME = "heap";
     public static int RECORDLENGTH = 0;
-    public static String KEYWORDS;
+    public static String KEYWORDS;//查找数据流文件的key
 
-    public static final Map<String, String> defindTable = new LinkedHashMap<> ();//initialize table structure
-    public static final List<Map<String, Object>> tableInfo = new ArrayList<> ();
+    public static final Map<String, String> defindTable = new LinkedHashMap<> ();//初始化表结构
+    public static final List<Map<String, Object>> tableInfo = new ArrayList<> ();//加载元数据对比表头，固定字段顺序
 
-    static {//table structure
+    static {//表结构
         defindTable.put ("DeviceId", TableConfig.INT + "(4)");
         defindTable.put ("ArrivalTime", TableConfig.DATE + "(8)");
         defindTable.put ("DepartureTime", TableConfig.DATE + "(8)");
@@ -47,9 +47,10 @@ public class TableConfig {
         defindTable.put ("BetweenStreet2", TableConfig.CHAR + "(30)");
         defindTable.put ("Side Of Street", TableConfig.INT + "(4)");
         defindTable.put ("In Violation", TableConfig.BOOLEAN + "(1)");
+        defindTable.put ("Vehicle Present", TableConfig.BOOLEAN + "(1)");
     }
 
-
+    //加载元数据初始化表结构
     public static void initTableInfo(String... fields) {
         Stream.of (fields).forEach (f -> {
             String attr = defindTable.get (f);
@@ -57,7 +58,7 @@ public class TableConfig {
         });
     }
 
-    //load data stream file and initialize
+    //加载数据流文件初始化表结构
     public static void initTableInfo() {
         TableConfig.defindTable.forEach ((k, v) -> TableConfig.initTable (k, v));
     }

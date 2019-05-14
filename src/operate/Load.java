@@ -12,8 +12,8 @@ import java.io.RandomAccessFile;
 import java.text.ParseException;
 
 public class Load {
-    private static int pageNum;//total page loaded
-    private static int pagePoint;//page pointer
+    private static long pageNum;//加载的数据流文件总页数
+    private static long pagePoint;//当前需要解析的页指针
 
     private int pageSize;
     private String dataFilePath;
@@ -24,23 +24,23 @@ public class Load {
         this.pageSize = pageSize;
         this.dataFilePath = TableConfig.PAGENAME + TableConfig.POINT + String.valueOf (pageSize);
         raf = new RandomAccessFile(dataFilePath, "r");
-        pageNum = (int) raf.length () / pageSize;
+        pageNum = raf.length () / pageSize;
         pagePoint = 0;
     }
 
-    //check if has next page
+    //加载的数据流文件是否有下一页
     public boolean hasNext() {
         return pagePoint < pageNum;
     }
 
-    //get next page
+    //获取数据流文件下一页
     public Page next() throws IOException {
         Page page = nextPage ();
         pagePoint ++;
         return page;
     }
 
-    //close
+    //关闭流
     public void close() throws IOException {
         if (raf != null) {
             raf.close ();
@@ -52,15 +52,15 @@ public class Load {
         long numIndex = beginIndex + pageSize - FieldType.INT.getLength(0);
         raf.seek(numIndex);
         byte[] numBytes = new byte[4];
-        raf.readFully(numBytes);//total record number for current page
+        raf.readFully(numBytes);//当前页记录总条数
         int recordNum = TypeUtil.bytesToInt (numBytes);
-        return new Page (pagePoint + 1, recordNum);
+        return new Page ( pagePoint + 1, recordNum);
     }
 
-    //analyse，search for demand record
+    //对传入的页进行解析，查找指定的记录
     public void query(Page page) throws IOException, ParseException {
         byte[] recordByte = new byte[TableConfig.RECORDLENGTH];
-        raf.seek ((long) (page.getPageId () - 1) * pageSize);
+        raf.seek ((page.getPageId () - 1) * pageSize);
         for (int i = 0; i < page.getRecordNum (); i++) {
             raf.read(recordByte);
             String[] records = RecordUtil.parseRecord(recordByte);

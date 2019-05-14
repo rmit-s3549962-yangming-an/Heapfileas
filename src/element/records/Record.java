@@ -3,15 +3,15 @@ package element.records;
 import config.TableConfig;
 
 /**
- * data file record
+ * 数据文件单条记录
  */
 public class Record {
     private final String[] fields;
     private final int size;
-    private int pageId;
+    private long pageId;
     private int recordId;
 
-    public Record(String[] fields, int pageId, int recordId) {
+    public Record(String[] fields, long pageId, int recordId) {
         this.size = fields.length;
         this.fields = fields;
         this.pageId = pageId;
@@ -36,7 +36,7 @@ public class Record {
         return fields;
     }
 
-    public int getPageId() {
+    public long getPageId() {
         return pageId;
     }
 

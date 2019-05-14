@@ -6,20 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * data page
+ * 数据文件页
  */
 public class Page {
     private final List<Record> list;
-    private final int pageId;
+    private final long pageId;
     private int recordNum;
 
-    public Page(int pageId, int recordNum) {
+    public Page(long pageId, int recordNum) {
         this.pageId = pageId;
         this.recordNum = recordNum;
         this.list = new ArrayList<> ();
     }
 
-    public int getPageId() {
+    public long getPageId() {
         return this.pageId;
     }
 

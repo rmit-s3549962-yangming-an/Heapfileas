@@ -7,15 +7,15 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * int type
+ * 数据字段long类型
  */
-public class IntField implements Field<Integer>, Comparable<IntField> {
-    private Integer value;
+public class LongField implements Field<Long>, Comparable<LongField> {
+    private Long value;
     private FieldType type;
     private int defindLength;
     private int realLength;
 
-    public IntField(FieldType type) {
+    public LongField(FieldType type) {
         this.type = type;
     }
 
@@ -27,16 +27,17 @@ public class IntField implements Field<Integer>, Comparable<IntField> {
                 sb.append ("#");
             }
             dos.writeBytes (sb.toString ());
-        } else dos.writeInt (value);
+        }
+        dos.writeLong (value);
     }
 
     @Override
-    public Integer parse(byte[] bytes) throws ParseException {
+    public Long parse(byte[] bytes) throws ParseException {
         if (bytes.length != getDefindLength ()) {
-            throw new ParseException ("Parse Error:IntBytesLength=" + bytes.length);
+            throw new ParseException ("Parse Error:LongBytesLength=" + bytes.length);
         }
-        if ("#".equals ((char) bytes[0])) value = null;
-        value = TypeUtil.bytesToInt(bytes);
+        if ("#".equals ((char) bytes[0])) return null;
+        value = TypeUtil.bytesToLong (bytes);
         return value;
     }
 
@@ -46,12 +47,12 @@ public class IntField implements Field<Integer>, Comparable<IntField> {
     }
 
     @Override
-    public Integer getValue() {
+    public Long getValue() {
         return value;
     }
 
     @Override
-    public void setValue(Integer value) {
+    public void setValue(Long value) {
         this.value = value;
         setRealLength (type.getLength (0));
     }
@@ -59,20 +60,20 @@ public class IntField implements Field<Integer>, Comparable<IntField> {
     @Override
     public String toString() {
         if (value == null) return "";
-        else return value.toString ();
+        return value.toString ();
     }
 
     @Override
-    public int compareTo(IntField o) {
+    public int compareTo(LongField o) {
         return this.value.compareTo (o.getValue ());
-    }
-
-    public void setDefindLength(int defindLength) {
-        this.defindLength = defindLength;
     }
 
     public int getDefindLength() {
         return defindLength;
+    }
+
+    public void setDefindLength(int defindLength) {
+        this.defindLength = defindLength;
     }
 
     public void setRealLength(int realLength) {
