@@ -1,8 +1,7 @@
 import operate.Write;
 
 public class dbload {
-
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         if (args.length != 3) {
             System.out.println("The parameter must have three");
             return;
@@ -23,9 +22,16 @@ public class dbload {
         } catch (Exception e) {
             System.out.println("The size of page need int type");
         }
-        Write write = new Write (pageSize, dataFile);
+        Write write = null;
         long start = System.currentTimeMillis ();
-        write.write ();
+        try {
+            write = new Write (pageSize, dataFile);
+            write.write ();
+        } catch (Exception e) {
+            e.printStackTrace ();
+        } finally {
+            write.close ();
+        }
         long stop = System.currentTimeMillis ();
         System.out.println ("The number of milliseconds to create the heap file is " + (stop - start) + "ms");
     }
