@@ -3,7 +3,7 @@ package element.fields;
 import java.io.Serializable;
 
 /**
- * 数据文件字段类型
+ *  Data file field type
  */
 public enum FieldType implements Serializable {
     INT ("int") {

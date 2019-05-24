@@ -8,7 +8,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * 数据字段日期类型
+ *  Data field date type
  */
 public class DateField implements Field<Long>, Comparable<DateField> {
     private Long value;

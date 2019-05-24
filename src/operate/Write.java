@@ -15,7 +15,7 @@ public class Write {
     private static int i = 1;
     private int pageSize;
     private String dataFilePath;
-    private long recordsNum;//记录总条数
+    private long recordsNum;// Total number of records
     private ObjectOutputStream oos;
 
     public Write(int pageSize, String dataFilePath) throws Exception {
@@ -28,7 +28,7 @@ public class Write {
         oos = new ObjectOutputStream (bos);
     }
 
-    //读取元数据，写成固定格式的数据流文件
+    // Read metadata and write it as a stream file in a fixed format
     public void write() throws IOException, ParseException {
         String heapPath = TableConfig.PAGENAME + "." + pageSize;
         File file = new File (heapPath);
@@ -44,7 +44,7 @@ public class Write {
             int realSize = FieldType.INT.getLength (0);
             int pRecordNum = 0;
             String record;
-            while ((record = lnr.readLine ()) != null) {//一次写一页文件
+            while ((record = lnr.readLine ()) != null) {// Write one page at a time
                 if ((realSize + TableConfig.RECORDLENGTH) > pageSize) {
                     int space = pageSize - realSize;
                     StringBuilder sb = new StringBuilder ();
@@ -68,14 +68,14 @@ public class Write {
                 realSize += TableConfig.RECORDLENGTH;
                 recordsNum ++;
 
-                //创建DeviceId ArrivalTime索引
+                // Create a DeviceId ArrivalTime Index
                 Index index = new Index (pageNum, pRecordNum - 1);
                 String value = index.serializ ();
                 String key = rs[0] + rs[1];
                 tree.insert (key, value);
 
                 if (recordsNum > 0 && recordsNum % TableConfig.TREESIZE == 0) {
-                    //写索引文件
+                    // Write index file
                     writeIndexFile (tree);
                     tree = new BPlusTree ();
                 }

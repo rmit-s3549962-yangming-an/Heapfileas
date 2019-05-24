@@ -8,16 +8,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 字段工厂，享元模式
+ * Field factory, Flyweight mode
  */
 public class FieldFactory {
     private static final Map<String, Field> container = new HashMap<>();
 
     /**
-     * 字段对象复用工厂
-     * @param type 字段类型
-     * @param value 字段值
-     * @param defindLength 表结构定义字节长度
+     *  Field object reuse factory
+     * @param type Field Type
+     * @param value Field value
+     * @param defindLength Table structure definition byte length
      * @return
      * @throws ParseException
      */

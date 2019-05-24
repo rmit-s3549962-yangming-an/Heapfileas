@@ -6,7 +6,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * 数据字段布尔类型
+ *  Data field boolean type
  */
 public class BooleanField implements Field<String>, Comparable<BooleanField> {
     private String value;

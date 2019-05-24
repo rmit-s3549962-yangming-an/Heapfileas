@@ -3,7 +3,7 @@ package element.records;
 import config.TableConfig;
 
 /**
- * 数据文件单条记录
+ * Data file single record
  */
 public class Record {
     private final String[] fields;

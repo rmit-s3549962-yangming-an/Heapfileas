@@ -7,7 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * 数据字段不可变长字符类型
+ *  Data field immutable long character type
  */
 public class CharField implements Field<String>, Comparable<CharField> {
     private String value;

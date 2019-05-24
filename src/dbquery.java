@@ -8,6 +8,16 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
+
+/**
+ *  - Equality query:
+ *   java dbquery "string to query" pagesize
+ *   E.g：java dbquery "1861901/04/2017 08:10:06 PM" 4096
+ *
+ * - Range query：
+ *   java dbquery "String 1" "String 2" pagesize
+ *   E.g：java dbquery "1718510/10/2017 09:56:59 PM" "1719007/27/2017 11:25:02 AM" 4096
+ */
 public class dbquery {
     public static void main(String[] args) {
         if (args.length != 2 && args.length != 3) {

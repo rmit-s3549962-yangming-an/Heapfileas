@@ -7,7 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * 数据字段可变长字符类型
+ * Data field variable length character type
  */
 public class VarcharField implements Field<String>, Comparable<VarcharField> {
     private String value;

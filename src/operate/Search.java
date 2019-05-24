@@ -71,7 +71,7 @@ public class Search {
         }
     }
 
-    //关闭流
+    // Close flow
     public void close() throws IOException {
         if (raf != null) {
             raf.close ();

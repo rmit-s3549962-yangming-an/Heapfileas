@@ -7,7 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * 数据字段long类型
+ *  Data field long type
  */
 public class LongField implements Field<Long>, Comparable<LongField> {
     private Long value;

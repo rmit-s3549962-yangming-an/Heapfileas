@@ -13,8 +13,8 @@ import java.io.RandomAccessFile;
 import java.text.ParseException;
 
 public class Load {
-    private static long pageNum;//加载的数据流文件总页数
-    private static long pagePoint;//当前需要解析的页指针
+    private static long pageNum;// The total number of pages of the loaded stream file
+    private static long pagePoint;// The page pointer that needs to be parsed currently
 
     private int pageSize;
     private String dataFilePath;
@@ -29,19 +29,19 @@ public class Load {
         pagePoint = 0;
     }
 
-    //加载的数据流文件是否有下一页
+    // Whether the loaded data stream file has the next page
     public boolean hasNext() {
         return pagePoint < pageNum;
     }
 
-    //获取数据流文件下一页
+    // Get the data stream file next page
     public Page next() throws IOException {
         Page page = nextPage ();
         pagePoint ++;
         return page;
     }
 
-    //关闭流
+    // Close flow
     public void close() throws IOException {
         if (raf != null) {
             raf.close ();
@@ -53,12 +53,12 @@ public class Load {
         long numIndex = beginIndex + pageSize - FieldType.INT.getLength(0);
         raf.seek(numIndex);
         byte[] numBytes = new byte[4];
-        raf.readFully(numBytes);//当前页记录总条数
+        raf.readFully(numBytes);// Current page record total number of records
         int recordNum = TypeUtil.bytesToInt (numBytes);
         return new Page ( pagePoint + 1, recordNum);
     }
 
-    //对传入的页进行解析，查找指定的记录
+    // Parse the incoming page to find the specified record
     public void query(Page page, Condition condition) throws IOException, ParseException {
         byte[] recordByte = new byte[TableConfig.RECORDLENGTH];
         raf.seek ((page.getPageId () - 1) * pageSize);
@@ -73,12 +73,8 @@ public class Load {
                         page.getList ().add (record);
                     break;
                 case RANGE:
-                    if (result.compareTo (TableConfig.RANGS_KEYS[0]) == 0 || result.compareTo (TableConfig.RANGS_KEYS[1]) == 0) {
-                        page.getList ().add (record);
-                        break;
-                    }
-                    if (result.compareTo (TableConfig.RANGS_KEYS[0]) > 0 && result.compareTo (TableConfig.RANGS_KEYS[1]) < 0) {
-                        page.getList ().add (record);
+                    if (TableConfig.RANGS_KEYS[1].compareTo(result) >= 0 && TableConfig.RANGS_KEYS[0].compareTo(result) <= 0) {
+                        page.getList().add(record);
                     }
                     break;
             }
