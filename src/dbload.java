@@ -1,11 +1,5 @@
 import operate.Write;
 
-
-/**
- *  ### Command for loading data
- *
- * java dbload -p pagesize datafile
- */
 public class dbload {
     public static void main(String[] args) {
         if (args.length != 3) {

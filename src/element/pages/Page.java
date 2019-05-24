@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Data file page
+ * 数据文件页
  */
 public class Page {
     private final List<Record> list;

@@ -3,13 +3,7 @@ package element.tree;
 import config.TableConfig;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class BPlusTree<K extends Comparable<? super K>, V> implements Serializable {
 
@@ -39,43 +33,12 @@ public class BPlusTree<K extends Comparable<? super K>, V> implements Serializab
         return root.getValue(key);
     }
 
-    public List<V> searchRange(K key1, K key2,
-                               RangePolicy policy) {
+    public List<V> searchRange(K key1, K key2, RangePolicy policy) {
         return root.getRange(key1, key2, policy);
     }
 
     public void insert(K key, V value) {
         root.insertValue(key, value);
-    }
-
-    public String toString() {
-        Queue<List<Node>> queue = new LinkedList<List<Node>>();
-        queue.add(Arrays.asList(root));
-        StringBuilder sb = new StringBuilder();
-        while (!queue.isEmpty()) {
-            Queue<List<Node>> nextQueue = new LinkedList<List<Node>>();
-            while (!queue.isEmpty()) {
-                List<Node> nodes = queue.remove();
-                sb.append('{');
-                Iterator<Node> it = nodes.iterator();
-                while (it.hasNext()) {
-                    Node node = it.next();
-                    sb.append(node.toString());
-                    if (it.hasNext())
-                        sb.append(", ");
-                    if (node instanceof BPlusTree.InternalNode)
-                        nextQueue.add(((InternalNode) node).children);
-                }
-                sb.append('}');
-                if (!queue.isEmpty())
-                    sb.append(", ");
-                else
-                    sb.append('\n');
-            }
-            queue = nextQueue;
-        }
-
-        return sb.toString();
     }
 
     private abstract class Node implements Serializable {
@@ -91,8 +54,7 @@ public class BPlusTree<K extends Comparable<? super K>, V> implements Serializab
 
         abstract K getFirstLeafKey();
 
-        abstract List<V> getRange(K key1, K key2,
-                                  RangePolicy policy);
+        abstract List<V> getRange(K key1, K key2, RangePolicy policy);
 
         abstract void merge(Node sibling);
 
@@ -142,8 +104,7 @@ public class BPlusTree<K extends Comparable<? super K>, V> implements Serializab
         }
 
         @Override
-        List<V> getRange(K key1, K key2,
-                         RangePolicy policy) {
+        List<V> getRange(K key1, K key2, RangePolicy policy) {
             List<V> range = getChild (key1).getRange (key1, key2, policy);
             return range;
         }
@@ -245,14 +206,18 @@ public class BPlusTree<K extends Comparable<? super K>, V> implements Serializab
                 while (kIt.hasNext()) {
                     K key = kIt.next();
                     V value = vIt.next();
-                    int cmp1 = key.compareTo(key1);
-                    int cmp2 = key.compareTo(key2);
-                    if (((policy == RangePolicy.EXCLUSIVE && cmp1 > 0) || (policy == RangePolicy.INCLUSIVE && cmp1 >= 0))
-                            && ((policy == RangePolicy.EXCLUSIVE && cmp2 < 0) || (policy == RangePolicy.INCLUSIVE && cmp2 <= 0)))
-                        result.add(value);
-                    else if ((policy == RangePolicy.EXCLUSIVE && cmp2 >= 0)
-                            || (policy == RangePolicy.INCLUSIVE && cmp2 > 0))
-                        return result;
+                    int cmp1 = key.compareTo (key1);
+                    int cmp2 = key.compareTo (key2);
+                    switch (policy) {
+                        case EXCLUSIVE:
+                            if (cmp1 > 0 && cmp2 < 0) result.add (value);
+                            else if (cmp2 >= 0) return result;
+                            break;
+                        case INCLUSIVE:
+                            if (cmp1 >= 0 && cmp2 <= 0) result.add (value);
+                            else if (cmp2 > 0) return result;
+                            break;
+                    }
                 }
                 node = node.next;
             }

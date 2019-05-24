@@ -7,7 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- *  Data field int type
+ * 数据字段int类型
  */
 public class IntField implements Field<Integer>, Comparable<IntField> {
     private Integer value;

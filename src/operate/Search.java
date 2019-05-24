@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.util.List;
 
 public class Search {
+    //public static long time = 0L;
     private long total = 0L;
     private int pageSize;
     private RandomAccessFile raf;
@@ -19,6 +20,8 @@ public class Search {
 
     public Search(int pageSize) throws IOException {
         TableConfig.initTableInfo();
+        TableConfig.initRangKeys();
+        TableConfig.initKeyWords();
         this.pageSize = pageSize;
         raf = new RandomAccessFile(TableConfig.PAGENAME + TableConfig.POINT + String.valueOf (pageSize), "r");
         File file = new File (TableConfig.INDEXNAME);
@@ -34,11 +37,11 @@ public class Search {
                 BPlusTree<String, String> tree = (BPlusTree) ois.readObject ();
                 switch (condition) {
                     case EQUALITY:
-                        String values = tree.search (TableConfig.KEYWORDS);
+                        String values = tree.search (TableConfig.I_KEYWORDS);
                         hit (values);
                         break;
                     case RANGE:
-                        List<String> results = tree.searchRange (TableConfig.RANGS_KEYS[0], TableConfig.RANGS_KEYS[1], BPlusTree.RangePolicy.INCLUSIVE);
+                        List<String> results = tree.searchRange (TableConfig.R_RANGS_KEYS[0], TableConfig.R_RANGS_KEYS[1], BPlusTree.RangePolicy.INCLUSIVE);
                         for (String result : results) {
                             hit (result);
                         }
@@ -71,7 +74,7 @@ public class Search {
         }
     }
 
-    // Close flow
+    //关闭流
     public void close() throws IOException {
         if (raf != null) {
             raf.close ();

@@ -7,13 +7,13 @@ import java.io.IOException;
 import java.io.Serializable;
 
 /**
- *  Field interface
- * @param <T> Basic java type
+ * 字段接口
+ * @param <T> java基本类型
  */
 public interface Field<T> extends Serializable {
-    // Serialized field
+    //序列化字段
     void serialize(DataOutputStream dos) throws IOException;
-    // Deserialized field
+    //反序列化字段
     T parse(byte[] bytes) throws ParseException;
 
     FieldType getType();

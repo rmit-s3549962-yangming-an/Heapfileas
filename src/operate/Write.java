@@ -6,6 +6,7 @@ import element.fields.FieldFactory;
 import element.fields.FieldType;
 import element.tree.BPlusTree;
 import element.tree.Index;
+import utils.DateUtil;
 
 import java.io.*;
 import java.text.ParseException;
@@ -15,7 +16,7 @@ public class Write {
     private static int i = 1;
     private int pageSize;
     private String dataFilePath;
-    private long recordsNum;// Total number of records
+    private long recordsNum;//记录总条数
     private ObjectOutputStream oos;
 
     public Write(int pageSize, String dataFilePath) throws Exception {
@@ -28,7 +29,7 @@ public class Write {
         oos = new ObjectOutputStream (bos);
     }
 
-    // Read metadata and write it as a stream file in a fixed format
+    //读取元数据，写成固定格式的数据流文件
     public void write() throws IOException, ParseException {
         String heapPath = TableConfig.PAGENAME + "." + pageSize;
         File file = new File (heapPath);
@@ -44,7 +45,7 @@ public class Write {
             int realSize = FieldType.INT.getLength (0);
             int pRecordNum = 0;
             String record;
-            while ((record = lnr.readLine ()) != null) {// Write one page at a time
+            while ((record = lnr.readLine ()) != null) {//一次写一页文件
                 if ((realSize + TableConfig.RECORDLENGTH) > pageSize) {
                     int space = pageSize - realSize;
                     StringBuilder sb = new StringBuilder ();
@@ -68,14 +69,14 @@ public class Write {
                 realSize += TableConfig.RECORDLENGTH;
                 recordsNum ++;
 
-                // Create a DeviceId ArrivalTime Index
+                //创建DeviceId ArrivalTime索引
                 Index index = new Index (pageNum, pRecordNum - 1);
                 String value = index.serializ ();
-                String key = rs[0] + rs[1];
+                String key = rs[0] + DateUtil.regex (rs[1]);
                 tree.insert (key, value);
 
                 if (recordsNum > 0 && recordsNum % TableConfig.TREESIZE == 0) {
-                    // Write index file
+                    //写索引文件
                     writeIndexFile (tree);
                     tree = new BPlusTree ();
                 }
